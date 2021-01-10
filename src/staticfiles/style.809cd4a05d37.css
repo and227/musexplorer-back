@@ -1,0 +1,52 @@
+* {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: white;
+}
+body {
+  background: url("./noch-ulica-fonar.269e505f055a.jpg");
+}
+li {
+  list-style-type: none;
+}
+
+/*Nav*/
+#links {
+  display: flex;
+  justify-content: space-between;
+}
+#mainNav {
+  display: flex;
+  margin-top: 10px;
+  font-size: 22px;
+}
+#linksToUs {
+  display: flex;
+  font-size: 22px;
+  margin-top: 10px;
+  padding-right: 10px;
+}
+#mainNav li {
+  margin-right: 30px;
+}
+#linksToUs li {
+  margin-left: 15px;
+}
+
+/*content*/
+
+/*fotter*/
+#stuffs {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+#leftStuff {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+#rightStuff {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
