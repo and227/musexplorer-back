@@ -17,7 +17,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'musexplorer-test-01.herokuapp.com']
 
@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-
+    'webpack_loader',
     'corsheaders',
     'django_extensions',
     'rest_framework',
@@ -56,10 +56,22 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'src.config.urls'
 
+FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
+
+print(FRONTEND_DIR)
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+  'CACHE': DEBUG,
+  'BUNDLE_DIR_NAME': '/bundles/',
+  'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
+  }
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'apps/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +144,7 @@ STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/vue/public'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 WHITENOISE_INDEX_FILE = True
@@ -155,11 +167,11 @@ REST_FRAMEWORK = {
 
 # pagination 
 DEFAULT_PAGE = 1
-DEFAULT_PAGE_SIZE = 10
+DEFAULT_PAGE_SIZE = 20
 DEFAULT_OBJECT_PAGE_SIZE = {
-    'Album': 10,
-    'Category': 5,
-    'Photo': 20
+    'Album': 5,
+    'Track': 15,
+    'Group': 10
 }
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
