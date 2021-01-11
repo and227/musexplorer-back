@@ -39,13 +39,13 @@
             </ul>
         </div>
 
-        <!-- <script src="{% static 'js/app.js' %}"></script> -->
-
         <div id="app">
-            <app></app>
+
         </div>
 
-        {% render_bundle 'app' %}
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- <script src="{% static 'main.js' %}"></script> -->
+        {% render_bundle 'main' %}
 
         <div id="stuffs">
             <p id="leftStuff">any stuff</p>
@@ -53,7 +53,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
 </body>
 
 </html>

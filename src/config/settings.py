@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
+    # 'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'webpack_loader',
     'corsheaders',
@@ -55,18 +55,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'src.config.urls'
-
-FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
-
-print(FRONTEND_DIR)
-
-WEBPACK_LOADER = {
-  'DEFAULT': {
-  'CACHE': DEBUG,
-  'BUNDLE_DIR_NAME': '/bundles/',
-  'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
-  }
-}
 
 TEMPLATES = [
     {
@@ -141,16 +129,27 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(FRONTEND_DIR, 'public'),
+    os.path.join(FRONTEND_DIR, 'bundles'),
 )
 
-WHITENOISE_INDEX_FILE = True
+# WHITENOISE_INDEX_FILE = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+#   'CACHE': DEBUG,
+  'BUNDLE_DIR_NAME': os.path.join(STATIC_ROOT, '/'),
+  'STATS_FILE': os.path.join(FRONTEND_DIR, '.webpack-stats.json'),
+  }
+}
 
 # AUTH_USER_MODEL='users.User'
 
@@ -165,7 +164,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-# pagination 
+# pagination
 DEFAULT_PAGE = 1
 DEFAULT_PAGE_SIZE = 20
 DEFAULT_OBJECT_PAGE_SIZE = {
