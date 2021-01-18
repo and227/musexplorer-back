@@ -1,15 +1,27 @@
 <template>
-  <div id="app">
+  <div id="app" class="hide">
     <div id="windows">
-      <Groups v-bind:groupsAndAlbums="groupsAndAlbums"></Groups>
-      <Albums v-bind:groupsAndAlbums="groupsAndAlbums"></Albums>
+      <Groups
+        v-on:albumSave="handleAlbum"
+        v-on:IdSave="handleId"
+        v-bind:groupsAndAlbums="groupsAndAlbums"
+      ></Groups>
+      <Albums
+        v-bind:album="album"
+        v-bind:id="id"
+        v-bind:groupsAndAlbums="groupsAndAlbums"
+        v-on:albumIdSave="handleAlbumId"
+      ></Albums>
     </div>
+    <Tracks v-bind:AlbumId="AlbumId"></Tracks>
   </div>
 </template>
 
 <script>
 import Albums from './components/Albums'
 import Groups from './components/Groups'
+import Tracks from './components/Tracks'
+// import Nav from './components/Nav'
 
 export default {
   name: 'App',
@@ -18,35 +30,48 @@ export default {
       info: null,
       isActive: true,
       groupsAndAlbums: [],
+      album: '',
+      id: '',
+      AlbumId: '',
       bandsAndAlbumsLink:
         'https://musexplorer-test-01.herokuapp.com/api/albums/',
       tracksLink: 'https://musexplorer-test-01.herokuapp.com/api/tracks/',
     }
   },
+
   components: {
     Albums,
     Groups,
+    Tracks,
   },
+
   created() {
-    axios
-      .get(this.bandsAndAlbumsLink)
-      .then((response) => {
-        this.info = response
-        this.groupsAndAlbums = response.data.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    axios
-      .get(
-        this.bandsAndAlbumsLink +
-          '?album_uuid=ff906365-91e1-43f3-9012-459a63689420'
-      )
-      .then((response) => {
-        console.log(response)
-      })
+    document.querySelector('#groups').addEventListener('click', this.getGroups)
   },
-  methods: {},
+
+  methods: {
+    getGroups() {
+      document.querySelector('#app').classList.toggle('hide')
+      axios
+        .get(this.bandsAndAlbumsLink)
+        .then((response) => {
+          this.info = response
+          this.groupsAndAlbums = response.data.data.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    handleAlbum(currentAlbum) {
+      this.album = currentAlbum
+    },
+    handleId(currentId) {
+      this.id = currentId
+    },
+    handleAlbumId(currentAlbumId) {
+      this.AlbumId = currentAlbumId
+    },
+  },
 }
 </script>
 

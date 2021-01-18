@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=East+Sea+Dokdo&family=Potta+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
@@ -25,16 +27,23 @@
 
       <div id="links">
         <ul id="mainNav">
-          <li>Home</li>
-          <li>Bands</li>
-          <li>Gallery</li>
-          <li>About service</li>
+          <li><a href="http://localhost:8080/" title="Homepage">Home</a></li>
+          <li>
+            <a id="groups" href="#bands" title="Show | Hide">Bands</a>
+          </li>
+          <li class="gallery-li">
+            <a class="gallery-a" title="Sorry, this part is developing">Gallery</a>
+          </li class="gallery-li">
+          <li><a class="gallery-a" title="Sorry, this part is developing">About service</a></li>
         </ul>
         <ul id="linksToUs">
-          <li>Instagram</li>
-          <li>Vk</li>
-          <li>Telegram</li>
-          <li>GitHub</li>
+          <li>
+            <button type="button" class="btn btn-light" title="GitHub">
+              <a href="https://github.com/moon-light-night" target="__blank" style="color: black"
+                ><img src="./icons/github-logo_icon-icons.com_73546.ico"
+              /></a>
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -49,6 +58,17 @@
       </div>
     </div>
 
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../src/script.js"></script>
   </body>
 </html>
