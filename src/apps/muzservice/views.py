@@ -19,12 +19,12 @@ from rest_framework.serializers import ValidationError
 
 from .pagination import ListDataPagination, get_pagination_queryset
 from .models import Track, Album
-from .serializers import AlbumSerializer, TrackSerializer
+from .serializers import GroupSerializer, AlbumSerializer, TrackSerializer
 # from .services.image import upload_new_photo
 
 from .mixins import ViewObjectMixin
 from .renderers import ViewObjectRenderer
-from .services import get_albums, get_tracks
+from .services import get_groups, get_albums, get_tracks
 
 class MuzserviceViewSet(viewsets.GenericViewSet, ViewObjectMixin):
     lookup_field = 'uuid'
@@ -33,6 +33,68 @@ class MuzserviceViewSet(viewsets.GenericViewSet, ViewObjectMixin):
     # permission_classes = [IsAuthenticated]
     renderer_classes = [ViewObjectRenderer]
 
+
+class GroupViewSet(MuzserviceViewSet):
+    serializer_class = GroupSerializer
+
+    def list(self, request):
+        """ 
+        Отдаем список альбомов в зависимости от параметров запроса
+        """
+
+        group_uuids = self.request.query_params.get('uuids', None)
+        genre_uuids = self.request.query_params.get('genre', None)
+        if group_uuids:
+            group_uuids = group_uuids.replace('{', '').replace('}', '').split(',')
+        if genre_uuids:
+            genre_uuids = genre_uuids.replace('{', '').replace('}', '').split(',')
+        queryset = get_groups(group_uuids=group_uuids, genre_uuids=genre_uuids)
+        data = self.get_response_data(queryset)
+        return Response(data)
+
+    def retrieve(self, request, uuid=None):
+        queryset = self.get_queryset()
+        album = get_object_or_404(queryset, uuid=uuid)
+        data = self.get_response_data(album)
+        return Response(data)
+
+    def create(self, request):
+        try:
+            data: dict = json.loads(request.body)
+            categories: List[str] = data.pop('categories')
+            serializer = AlbumSerializer(data=data)
+            if serializer.is_valid(raise_exception=True):
+                album: Album = serializer.save()
+                album.categories.add(*categories)
+                album.save()
+            data = serializer.validated_data
+        except ValidationError as error:
+            data = error
+        return Response(data)
+
+    def update(self, request, uuid=None):
+        try:
+            queryset = self.get_queryset()
+            album: Album = get_object_or_404(queryset, uuid=uuid)
+            data: dict = json.loads(request.body)
+            categories: List[str] = data.pop('categories')
+            album.categories.add(*categories)
+            album.save()
+            serializer = AlbumSerializer(
+                instance=album,
+                data=data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            data = serializer.data
+        except ValidationError as error:
+            data = error
+        return Response(data)
+
+    def destroy(self, request, uuid=None):
+        queryset = self.get_queryset()
+        album = get_object_or_404(queryset, uuid=uuid)
+        album.delete()
+        return Response(None)
 
 class AlbumViewSet(MuzserviceViewSet):
     serializer_class = AlbumSerializer
@@ -43,12 +105,15 @@ class AlbumViewSet(MuzserviceViewSet):
         """
 
         uuids = self.request.query_params.get('uuids', None)
-        genre_uuids = self.request.query_params.get('genre', None)
+        genre_uuids = self.request.query_params.get('genres', None)
+        group_uuids = self.request.query_params.get('groups', None)
         if uuids:
             uuids = uuids.replace('{', '').replace('}', '').split(',')
         if genre_uuids:
             genre_uuids = genre_uuids.replace('{', '').replace('}', '').split(',')
-        queryset = get_albums(album_uuids=uuids, genre_uuids=genre_uuids)
+        if group_uuids:
+            group_uuids = group_uuids.replace('{', '').replace('}', '').split(',')
+        queryset = get_albums(album_uuids=uuids, genre_uuids=genre_uuids, group_uuids=group_uuids)
         data = self.get_response_data(queryset)
         return Response(data)
 

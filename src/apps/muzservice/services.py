@@ -1,10 +1,33 @@
 from django.db import connection
-from .models import Album, Track
+from .models import Group, Album, Track
+
+def get_groups(**params):
+    group_uuids = params.get('group_uuids', None)
+    genre_uuids = params.get('genre_uuids', None)
+
+    sql_query = "select g.* from groups as g"
+    if group_uuids and genre_uuids:
+        group_uuids = map(lambda s: "'{}'".format(s), group_uuids)
+        genre_uuids = map(lambda s: "'{}'".format(s), genre_uuids)
+        sql_query += ' where g.group_uuid in ({}) and g.genre in ({})'. \
+        format(','.join(group_uuids), ','.join(genre_uuids))
+    elif group_uuids:
+        group_uuids = map(lambda s: "'{}'".format(s), group_uuids)
+        sql_query += ' where g.group_uuid in ({})'. \
+        format(','.join(group_uuids))
+    elif genre_uuids:
+        genre_uuids = map(lambda s: "'{}'".format(s), genre_uuids)
+        sql_query += ' where g.genre in ({})'. \
+        format(','.join(genre_uuids))
+    sql_query += ';'
+    group_list = Group.objects.raw(sql_query)
+
+    return group_list
 
 def get_albums(**params):
     album_uuids = params.get('album_uuids', None)
     genre_uuids = params.get('genre_uuids', None)
-    # with connection.cursor() as cursor:
+    group_uuids = params.get('group_uuids', None)
 
     sql_query = "select a.* from albums as a"
     if album_uuids and genre_uuids:
@@ -20,11 +43,12 @@ def get_albums(**params):
         genre_uuids = map(lambda s: "'{}'".format(s), genre_uuids)
         sql_query += ' where a.genre in ({})'. \
         format(','.join(genre_uuids))
+    elif group_uuids:
+        group_uuids = map(lambda s: "'{}'".format(s), group_uuids)
+        sql_query += ' where a.album_group in ({})'. \
+        format(','.join(group_uuids))
     sql_query += ';'
     album_list = Album.objects.raw(sql_query)
-
-    # cursor.execute(sql_query)
-    # album_list = cursor.fetchall()
 
     return album_list
 
