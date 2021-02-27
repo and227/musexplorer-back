@@ -11,9 +11,10 @@ from .settings import BASE_DIR
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name='index.html'), name='app'),
+    path('oauth_test/', TemplateView.as_view(template_name='oauth_test.html')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('auth/', include("src.apps.auth.urls")),
-    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('auth/', include("src.apps.authentication.urls")),
+    path('accounts/', include('allauth.urls')),
 ]
 

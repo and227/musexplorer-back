@@ -32,13 +32,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     # 'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # extensions
     'webpack_loader',
     'corsheaders',
     'django_extensions',
+
+    # rest
     'rest_framework',
     'rest_framework.authtoken',
+
+    # user
     'src.apps.muzservice',
-    'oauth2_provider',
+    'src.apps.authentication',
+
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
 
 MIDDLEWARE = [
@@ -151,17 +165,44 @@ WEBPACK_LOADER = {
   }
 }
 
-# AUTH_USER_MODEL='users.User'
+LOGIN_URL='/admin/login/'
+
+AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ]
+}
+
+#######################
+# Oauth2
+#######################
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/oauth_test'
+ACCOUNT_LOGOUT_REDIRECT_URL ='/oauth_test'
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
 }
 
 # pagination
@@ -175,7 +216,9 @@ DEFAULT_OBJECT_PAGE_SIZE = {
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+############################
 # Cors
+############################
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
@@ -188,9 +231,6 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     "http://localhost:8000",
     "http://localhost:5000",
 )
-
-# Oauth2
-
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())

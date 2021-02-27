@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User 
+from src.apps.authentication.models import User
 from django.contrib.auth import authenticate, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response

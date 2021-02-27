@@ -1,0 +1,68 @@
+{% load socialaccount %}
+<html>
+  <head>
+    <title>Google Registration</title>
+  </head>
+  <body>
+  <h1>My Google Login Project</h1>
+  {% if user.is_authenticated %}
+  <p>Welcome, {{ user.username }} !</p>
+  <!-- <button>Logout</button> -->
+  <form method="post" action="/accounts/logout/">
+    <input type="hidden" name="csrfmiddlewaretoken" value="ThvUXgR4bHmwaekI0WyXoVAc0IBCV8qBEgjLuJXdiAYNVi55c5S1l1TNehQtZrUn">
+    <button type="submit">Sign Out</button>
+  </form>
+  <script>
+    // const btn = document.querySelector('button');
+    // btn.addEventListener( 'click', function() {
+    //     logout();
+    // } )
+
+    function getCookie(name) {
+        // Split cookie string and get all individual name=value pairs in an array
+        var cookieArr = document.cookie.split(";");
+        
+        // Loop through the array elements
+        for(var i = 0; i < cookieArr.length; i++) {
+            var cookiePair = cookieArr[i].split("=");
+            
+            /* Removing whitespace at the beginning of the cookie name
+            and compare it with the given string */
+            if(name == cookiePair[0].trim()) {
+                // Decode the cookie value and return
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        
+        // Return null if not found
+        return null;
+    }
+
+    // function csrfSafeMethod(method) {
+    //     // these HTTP methods do not require CSRF protection
+    //     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    // }
+
+    // function logout() {
+    //     let csrftoken = getCookie('csrftoken');
+
+    //     const XHR = new XMLHttpRequest();
+    //     XHR.open('POST', 'http://localhost:8000/accounts/logout/', true);
+    //     // XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    //     // XHR.setRequestHeader('X-CSRFToken', csrftoken);
+    //     // XHR.setRequestHeader('Cookie', 'csrftoken='+csrftoken);
+    //     XHR.send()
+    // }
+
+    const form_input = document.querySelector('input');
+    let csrftoken = getCookie('csrftoken');
+    form_input.setAttribute('value', csrftoken);
+  </script>
+
+  {% else %}
+  <a href="{% provider_login_url 'google' %}">Login with Google</a></br>
+  <a href="{% provider_login_url 'github' %}">Login with GitHub</a>
+  {% endif %}
+
+  </body>
+</html>

@@ -68,7 +68,7 @@ class Album(TimestampedModel, ActivityMarkModel):
 
 
 class Track(TimestampedModel, ActivityMarkModel):
-    name = models.CharField(verbose_name="Наименование комнозиции", max_length=64)
+    name = models.CharField(verbose_name="Наименование комнозиции", max_length=128)
     track_uuid = models.UUIDField(primary_key=True,
                             default=uuid.uuid4,
                             editable=False)
