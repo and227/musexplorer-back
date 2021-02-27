@@ -1,0 +1,13 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=www
+Group=www-data
+WorkingDirectory=/home/andrey/Projects/musexplorer/musexplorer/src
+ExecStart=/home/andrey/Projects/musexplorer/musexplorer/env/bin/gunicorn --workers 3 --bind unix:/home/andrey/Projects/musexplorer/musexplorer/gunicorn/gunicorn.sock config.wsgi:application --access-logfile /home/andrey/Projects/musexplorer/musexplorer/gunicorn/access.log --error-logfile /home/andrey/Projects/musexplorer/musexplorer/gunicorn/error.log
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
